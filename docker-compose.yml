@@ -1,0 +1,37 @@
+---
+version: '3'
+services:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.6.1
+    restart: always
+    expose:
+      - 9600
+    environment:
+      - xpack.monitoring.enabled=false
+    volumes:
+      - ./logstash/logstash.conf:/logstash.conf
+    command: "logstash -f /logstash.conf"
+    networks:
+      - logstash
+
+  logstash-fileimporter:
+    build: ./
+    restart: always
+    volumes:
+      - ./input:/input
+    depends_on:
+      - logstash
+    links:
+      - "logstash"
+    environment:
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=9600
+      - INPUT_DIR=/input
+      - FILEENDINGS=csv
+      - SLEEP=10
+    networks:
+      - logstash
+
+networks:
+  logstash:
+    driver: bridge
