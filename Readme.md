@@ -7,7 +7,7 @@ Reads files from a directory, sends them to a host:port (logstash) an DELETES th
 ## HowTo use
 ### Command
 ```
-docker run -d -v $(pwd)/input:/input -e INPUT_DIR=/input -e SLEEP:10 -e LOGSTASH_HOST=127.0.0.1 -e LOGSTASH_PORT=9600 -e FILEENDINGS=csv heckenmann/lfi
+docker run -d -v $(pwd)/input:/input -e INPUT_DIR=/input -e SLEEP:10 -e LOGSTASH_HOST=127.0.0.1 -e LOGSTASH_PORT=9600 -e FILEENDINGS=csv heckenmann/logstash-fileimporter
 ```
 ### Variables
 |Var        | Desc                                      |
