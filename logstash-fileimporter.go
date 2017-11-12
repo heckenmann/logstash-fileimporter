@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	log.Println("Waiting for files...")
+	log.Println("Initializing...")
 	// log.Println("")
 	// log.Println("The following variables must be set:")
 	// log.Println("LOGSTASH_HOST: IP where logstash runs")
@@ -29,6 +29,7 @@ func main() {
 	fileendings := os.Getenv("FILEENDINGS")
 	sleep, _ := strconv.Atoi(os.Getenv("SLEEP"))
 
+	log.Println("Waiting for files...")
 	for true {
 		// Sync
 		var wg sync.WaitGroup
@@ -52,20 +53,19 @@ func main() {
 
 				// Send file
 				if isValid {
-					log.Println("File found: " + (fileTmp).Name())
-
-					if SendFile(logstashHost, logstashPort, inputFolder, &fileTmp) {
+					log.Println("File found: ", (fileTmp).Name())
+					sendErr := SendFile(logstashHost, logstashPort, inputFolder, &fileTmp)
+					if sendErr == nil {
 						// DELETE fileTmp
 						err := os.Remove(inputFolder + string(os.PathSeparator) + (fileTmp).Name())
 						if err == nil {
-							log.Println("File deleted: " + (fileTmp).Name())
+							log.Println("File deleted: ", (fileTmp).Name())
 						} else {
-							log.Fatal("File could not be deleted: " + (fileTmp).Name())
+							log.Println("File could not be deleted: ", (fileTmp).Name())
 						}
 					} else {
-						log.Fatal("File could not be send: " + (fileTmp).Name())
+						log.Println("File could not be send: ", (fileTmp).Name(), " ", sendErr.Error())
 					}
-
 				} else {
 					// log.Println("File ignored: " + (fileTmp).Name())
 				}
@@ -74,7 +74,6 @@ func main() {
 
 		// Sleep
 		time.Sleep(time.Duration(sleep) * time.Second)
-
 		// Wait for threads
 		wg.Wait()
 	}
@@ -83,18 +82,18 @@ func main() {
 /**
 * Sends file to host:port.
 **/
-func SendFile(logstashHost string, logstashPort string, inputFolder string, file *os.FileInfo) bool {
+func SendFile(logstashHost string, logstashPort string, inputFolder string, file *os.FileInfo) error {
 	// Connection
 	conn, errConn := net.Dial("tcp", logstashHost+":"+logstashPort)
 	if errConn != nil {
-		panic(errConn)
+		return errConn
 	}
 	defer conn.Close()
 
 	// File
 	f, errFile := os.Open(inputFolder + string(os.PathSeparator) + (*file).Name())
 	if errFile != nil {
-		panic(errFile)
+		return errFile
 	}
 	defer f.Close()
 
@@ -103,12 +102,12 @@ func SendFile(logstashHost string, logstashPort string, inputFolder string, file
 	reader := bufio.NewReader(f)
 	_, errCopy := io.Copy(writer, reader)
 	if errCopy != nil {
-		return false
+		return errCopy
 	}
 	writer.WriteByte('\n')
 	errFlush := writer.Flush()
 	if errFlush != nil {
-		return false
+		return errFlush
 	}
-	return true
+	return nil
 }
