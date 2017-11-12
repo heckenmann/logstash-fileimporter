@@ -1,4 +1,4 @@
-FROM golang:1.8.3-jessie
+FROM golang:1.9.2-stretch
 
 RUN mkdir -p /opt/lfi
 WORKDIR /opt/lfi
