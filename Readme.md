@@ -9,7 +9,7 @@ For an example you can run the docker-compose.yml and have a look at logstash/lo
 
 ### Command
 ```
-docker run -d --name logstash-fileimporter -v $(pwd)/input:/input -e INPUT_DIR=/input -e SLEEP:10 -e LOGSTASH_HOST=127.0.0.1 -e LOGSTASH_PORT=9600 -e FILEENDINGS=csv heckenmann/logstash-fileimporter
+docker run -d --name logstash-fileimporter -v $(pwd)/input:/input -e INPUT_DIR=/input -e SLEEP=10 -e LOGSTASH_HOST=127.0.0.1 -e LOGSTASH_PORT=9600 -e FILEENDINGS=csv heckenmann/logstash-fileimporter
 ```
 ### Variables
 |Var        | Desc                                      |
