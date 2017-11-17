@@ -1,8 +1,11 @@
 # LOGSTASH-FILEIMPORTER
 (Written in GO)
 
-Reads files from a directory, sends them to a host:port (logstash) an DELETES the files after success.
+Reads files from a directory, sends them to a host:port (logstash) and DELETES the files after success.
 
+
+## Docker Hub
+https://hub.docker.com/r/heckenmann/logstash-fileimporter/
 
 ## HowTo use
 For an example you can run the docker-compose.yml and have a look at logstash/logstash.conf.
