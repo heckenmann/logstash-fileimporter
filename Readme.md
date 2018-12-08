@@ -3,6 +3,14 @@
 
 Reads files from a directory, sends them to a host:port (logstash) and DELETES the files after success.
 
+---
+
+***INFO***
+
+For logstash please use the new logstash-feature to delete files after import: https://www.elastic.co/guide/en/logstash/current/plugins-inputs-file.html#plugins-inputs-file-file_completed_action
+
+---
+
 
 ## Docker Hub
 https://hub.docker.com/r/heckenmann/logstash-fileimporter/
